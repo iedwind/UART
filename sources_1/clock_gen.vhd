@@ -41,7 +41,7 @@ architecture Behavioral of clock_gen is
     signal uart_bitrate : std_logic := '0';
 begin
     clk_uart <= uart_bitrate;
-    -- GENERAR CLOCK 115200 KHz
+    -- GENERAR CLOCK 115200 Hz * 32
     process(clk)
         variable count: integer := 0;
     begin
