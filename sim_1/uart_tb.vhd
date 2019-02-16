@@ -63,7 +63,7 @@ constant clk115_period : time := 8.68 us;
     signal new_word : std_logic := '0';
     signal uart_in : std_logic := '1';
     signal uart_out : std_logic := '1';
-    signal word_tx : std_logic_vector(9 downto 0) := '0'&x"AA"&'1';
+    signal word_tx : std_logic_vector(9 downto 0) := '1'&x"AA"&'0';
     signal word : std_logic_vector(9 downto 0) := (others=> '0');
 begin
     clk <= not clk after clk100Mhz_period/2;
@@ -75,7 +75,7 @@ begin
         if rising_edge(clk_uart_sim) then
             uart_in <= '1';
             if bit_count >= 0 and bit_count <= 9 then
-                uart_in <= word_tx(9-bit_count);
+                uart_in <= word_tx(bit_count);
             end if;
             if bit_count = 100 then
                 bit_count := 0;
