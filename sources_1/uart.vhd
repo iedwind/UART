@@ -79,7 +79,7 @@ begin
                     when WAIT_CYCLES_FRONT =>
                         ticks_count := ticks_count + 1;
                         if ticks_count = 16 then
-                            word_rx_uart(9-bit_counter) <= uart_in;
+                            word_rx_uart(bit_counter) <= uart_in;
                             bit_counter := bit_counter +1;
                             state <= WAIT_CYCLES_BACK;
                         end if;
@@ -118,12 +118,12 @@ begin
                         uart_out <= '1';
                         if new_word_tx = '1' then
                             state_tx <= WAIT_CYCLES_FRONT;
-                            word_tx_uart <= '0' & word_tx & '1';
+                            word_tx_uart <= '1' & word_tx & '0';
                         end if;
                     when WAIT_CYCLES_FRONT =>
                         ticks_count := ticks_count + 1;
                         if ticks_count = 16 then
-                            uart_out <= word_tx_uart(9-bit_counter);
+                            uart_out <= word_tx_uart(bit_counter);
                             bit_counter := bit_counter +1;
                             state_tx <= WAIT_CYCLES_BACK;
                         end if;
