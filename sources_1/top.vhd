@@ -35,7 +35,7 @@ entity top is
     Port (
         CLK100MHZ : in STD_LOGIC; 
         sw : in STD_LOGIC_VECTOR(3 downto 0);
-        led : out STD_LOGIC_VECTOR(2 downto 0);
+        led : out STD_LOGIC_VECTOR(1 downto 0);
         uart_txd_in : in STD_LOGIC;
         uart_rxd_out : out STD_LOGIC
            );
@@ -71,7 +71,6 @@ architecture Behavioral of top is
 begin
 
     led(0) <= sw(0);
-    led(2) <= word_rx(1);
     
     heartbeat_inst : heartbeat 
     Port map ( 
