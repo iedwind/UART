@@ -17,10 +17,8 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,32 +30,31 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity uart is
-    Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
-           uart_in : in STD_LOGIC;
-           word_rx : out STD_LOGIC_VECTOR(9 downto 0);
-           new_word_rx : out STD_LOGIC;
-           uart_out : out STD_LOGIC;
-           word_tx : in STD_LOGIC_VECTOR(7 downto 0);
-           new_word_tx : in STD_LOGIC
-           );
+    port (
+        clk         : in STD_LOGIC;
+        rst         : in STD_LOGIC;
+        uart_in     : in STD_LOGIC;
+        word_rx     : out STD_LOGIC_VECTOR(9 downto 0);
+        new_word_rx : out STD_LOGIC;
+        uart_out    : out STD_LOGIC;
+        word_tx     : in STD_LOGIC_VECTOR(7 downto 0);
+        new_word_tx : in STD_LOGIC
+    );
 end uart;
 
 architecture Behavioral of uart is
--- SIGNALS
-   type state_type is (IDLE, START_BIT, WAIT_CYCLES_FRONT,WAIT_CYCLES_BACK);
-   type state_tx_type is (IDLE, WAIT_CYCLES_FRONT,WAIT_CYCLES_BACK);
-   signal state : state_type;
-   signal state_tx : state_tx_type;
-   signal word_rx_uart : std_logic_vector(9 downto 0);
-   signal word_tx_uart : std_logic_vector(9 downto 0);
-			
-
+    -- SIGNALS
+    type state_type is (IDLE, START_BIT, WAIT_CYCLES_FRONT, WAIT_CYCLES_BACK);
+    type state_tx_type is (IDLE, WAIT_CYCLES_FRONT, WAIT_CYCLES_BACK);
+    signal state        : state_type;
+    signal state_tx     : state_tx_type;
+    signal word_rx_uart : std_logic_vector(9 downto 0);
+    signal word_tx_uart : std_logic_vector(9 downto 0);
 begin
     word_rx <= word_rx_uart;
-    
+
     -- RX PROTOCOL UART
-    process(clk)
+    process (clk)
         variable bit_counter : integer := 0;
         variable ticks_count : integer := 0;
     begin
@@ -80,7 +77,7 @@ begin
                         ticks_count := ticks_count + 1;
                         if ticks_count = 16 then
                             word_rx_uart(bit_counter) <= uart_in;
-                            bit_counter := bit_counter +1;
+                            bit_counter := bit_counter + 1;
                             state <= WAIT_CYCLES_BACK;
                         end if;
                     when WAIT_CYCLES_BACK =>
@@ -88,21 +85,21 @@ begin
                         if ticks_count = 32 then
                             ticks_count := 0;
                             state <= WAIT_CYCLES_FRONT;
-							if bit_counter = 10 then
-								new_word_rx <= '1';
-								bit_counter := 0;
-								state <= START_BIT;
-							end if;
-						end if;
-                    when others => 
+                            if bit_counter = 10 then
+                                new_word_rx <= '1';
+                                bit_counter := 0;
+                                state <= START_BIT;
+                            end if;
+                        end if;
+                    when others =>
                         state <= IDLE;
                 end case;
             end if;
         end if;
     end process;
-    
+
     -- TX PROTOCOL UART
-    process(clk)
+    process (clk)
         variable bit_counter : integer := 0;
         variable ticks_count : integer := 0;
     begin
@@ -117,14 +114,14 @@ begin
                     when IDLE =>
                         uart_out <= '1';
                         if new_word_tx = '1' then
-                            state_tx <= WAIT_CYCLES_FRONT;
+                            state_tx     <= WAIT_CYCLES_FRONT;
                             word_tx_uart <= '1' & word_tx & '0';
                         end if;
                     when WAIT_CYCLES_FRONT =>
                         ticks_count := ticks_count + 1;
                         if ticks_count = 16 then
                             uart_out <= word_tx_uart(bit_counter);
-                            bit_counter := bit_counter +1;
+                            bit_counter := bit_counter + 1;
                             state_tx <= WAIT_CYCLES_BACK;
                         end if;
                     when WAIT_CYCLES_BACK =>
@@ -132,16 +129,16 @@ begin
                         if ticks_count = 31 then
                             ticks_count := 0;
                             state_tx <= WAIT_CYCLES_FRONT;
-							if bit_counter = 10 then
-								bit_counter := 0;
-								state_tx <= IDLE;
-							end if;
-						end if;
-                    when others => 
+                            if bit_counter = 10 then
+                                bit_counter := 0;
+                                state_tx <= IDLE;
+                            end if;
+                        end if;
+                    when others =>
                         state_tx <= IDLE;
                 end case;
             end if;
         end if;
     end process;
-    
+
 end Behavioral;

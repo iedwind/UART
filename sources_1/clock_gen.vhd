@@ -17,10 +17,8 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,9 +30,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity clock_gen is
-    Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
-           clk_uart : out STD_LOGIC);
+    port (
+        clk      : in STD_LOGIC;
+        rst      : in STD_LOGIC;
+        clk_uart : out STD_LOGIC);
 end clock_gen;
 
 architecture Behavioral of clock_gen is
@@ -42,19 +41,19 @@ architecture Behavioral of clock_gen is
 begin
     clk_uart <= uart_bitrate;
     -- GENERAR CLOCK 115200 Hz * 32
-    process(clk)
-        variable count: integer := 0;
+    process (clk)
+        variable count : integer := 0;
     begin
         if rising_edge(clk) then
             if rst = '1' then
                 uart_bitrate <= '0';
                 count := 0;
-            else              
+            else
                 count := count + 1;
                 if count = 14 then
                     uart_bitrate <= not uart_bitrate;
                     count := 0;
-                end if;        
+                end if;
             end if;
         end if;
     end process;

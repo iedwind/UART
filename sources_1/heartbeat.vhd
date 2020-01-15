@@ -17,10 +17,8 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,25 +30,26 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity heartbeat is
-    Port ( clk : in STD_LOGIC;
-           led : out STD_LOGIC);
+    port (
+        clk : in STD_LOGIC;
+        led : out STD_LOGIC);
 end heartbeat;
 
 architecture Behavioral of heartbeat is
     signal led_int : std_logic := '0';
 begin
-    
+
     led <= led_int;
 
-    process(clk)
+    process (clk)
         variable counter : integer := 0;
     begin
         if rising_edge(clk) then
             counter := counter + 1;
-            if(counter = 100000000) then
+            if (counter = 100000000) then
                 led_int <= not led_int;
                 counter := 0;
             end if;
-        end if;    
+        end if;
     end process;
 end Behavioral;

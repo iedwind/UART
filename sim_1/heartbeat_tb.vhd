@@ -17,10 +17,8 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,26 +30,27 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity heartbeat_tb is
---  Port ( );
+    --  Port ( );
 end heartbeat_tb;
 
 architecture Behavioral of heartbeat_tb is
--- COMPONENTS
-COMPONENT heartbeat is
-    Port ( clk : in STD_LOGIC;
-           led : out STD_LOGIC);
-END COMPONENT;
+    -- COMPONENTS
+    component heartbeat is
+        port (
+            clk : in STD_LOGIC;
+            led : out STD_LOGIC);
+    end component;
     signal CLK100MHZ : std_logic := '0';
-    signal led : std_logic := '0';
-    
+    signal led       : std_logic := '0';
+
     constant clk100Mhz_period : time := 10 ns;
 begin
     CLK100MHZ <= not CLK100MHZ after clk100Mhz_period/2;
--- DUT
-    heartbeat_inst : heartbeat 
-    Port map ( 
+    -- DUT
+    heartbeat_inst : heartbeat
+    port map(
         clk => CLK100MHZ,
         led => led
-        );
-        
+    );
+
 end Behavioral;
