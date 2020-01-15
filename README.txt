@@ -1,4 +1,4 @@
-Con estos ficheros se implementa una UART.
+Con estos ficheros se implementa el protcolo UART.
 
 Ademas tambien hace parpadear dos LEDs uno con un Switch y otro con un Clock.
 
